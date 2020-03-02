@@ -1,6 +1,5 @@
 ﻿var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-document.getElementById("send").disabled = true;
 
 connection.on("ReceiveMessage", function (user, message) {
     var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt").replace(/>/g, "&gt;");
@@ -13,19 +12,26 @@ connection.on("ReceiveMessage", function (user, message) {
 });
 
 connection.start().then(function () {
-    document.getElementById("send").disabled = false;
+    document.getElementById("sendN").disabled = false;
+    
 }).catch(function (err) {
     return console.error(err.toString());
 });
 
 document.getElementById("send").addEventListener("click", function (event) {
-    var user = document.getElementById("user").value;
     var message = document.getElementById("msg").value;
-    
-    nomeU.textContent = user;
-    document.getElementById("user").disabled = true;
+    var user = document.getElementById("user").value;
+
     connection.invoke("SendMessage", user, message).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();
+});
+
+document.getElementById("sendN").addEventListener("click", function (event) {
+    var user = document.getElementById("user").value;
+
+    nomeU.textContent = user;
+    document.getElementById("sendN").disabled = true;
+    document.getElementById("user").disabled = true;
 });
